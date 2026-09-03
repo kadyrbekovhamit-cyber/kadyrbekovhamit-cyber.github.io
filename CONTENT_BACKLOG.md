@@ -28,6 +28,26 @@ This is the working queue for evidence-led editorial and distribution work. A ta
 - [ ] GERO research digest: five failures above arithmetic
   - Convert the retraction log into a clear case study about object mismatch, priority, and citation integrity.
 
+## Review Lab shortlist
+
+- [ ] NVIDIA RTX A4000: compact local-AI workstation experiment
+  - Obtain a legitimate used unit before making performance claims.
+  - Measure model fit, tokens per second, wall power, temperature, and noise under a documented configuration.
+- [ ] TOPDON TC001 Plus: electronics and building-diagnostics experiment
+  - Compare readings with contact probes and document emissivity, distance, reflective surfaces, and environmental conditions.
+- [ ] Pinecil V2: portable soldering workflow
+  - Record charger, cable, firmware, tip, set point, heat-up time, recovery, and temperature stability.
+- [ ] Analog Discovery 3: laboratory-in-a-backpack test
+  - Test bandwidth, sampling, protocol decoding, supplies, accessory cost, and input-protection limits against a stated job.
+
+## Habr publication gate
+
+- [ ] Publish on Habr only after a real hands-on experiment and a final article written personally by Xamit.
+  - Do not use affiliate or referral links.
+  - Do not submit AI-written or AI-edited prose.
+  - Evidence Picks may prepare the source dossier, experiment design, raw tables, calculations, and charts.
+  - The final Habr article must be an original human account of what was actually done and observed.
+
 ## Distribution and partner follow-up
 
 - [ ] Add eBay Partner Network links only after written account approval.
