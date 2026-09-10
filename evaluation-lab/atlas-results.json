@@ -1,0 +1,541 @@
+{
+  "schema_version": 1,
+  "analyzer_version": "0.1.0",
+  "input_sha256": "3bcd7ab082a1c2ee0d6fc0ee35505e8f29d44b92800c89dcb2cea0e610f9a987",
+  "title": "Expenditure review: what the records can establish",
+  "source": {
+    "type": "synthetic",
+    "description": "Fictional training ledger. Every vendor, invoice, amount and control total was created for this demonstration; no government or customer records are used."
+  },
+  "verdict": "review_required",
+  "summary": {
+    "source_rows": 15,
+    "unique_nonempty_source_ids": 13,
+    "duplicate_import_rows": 1,
+    "conflicting_identity_rows": 2,
+    "exception_groups": 4,
+    "not_testable_groups": 8
+  },
+  "known_cash_subtotals": {
+    "source_rows": {
+      "EUR": "25.00",
+      "USD": "930.00"
+    },
+    "unique_record_ids": {
+      "EUR": "25.00",
+      "USD": "720.00"
+    },
+    "incomplete_currencies": [
+      "USD"
+    ],
+    "unknown_scope_or_currency": false
+  },
+  "reconciliation": [
+    {
+      "currency": "EUR",
+      "basis": "unique_record_ids",
+      "known_subtotal": "25.00",
+      "expected": "25.00",
+      "difference": "0.00",
+      "status": "pass"
+    },
+    {
+      "currency": "USD",
+      "basis": "unique_record_ids",
+      "known_subtotal": "720.00",
+      "expected": "825.00",
+      "difference": null,
+      "status": "not_testable"
+    }
+  ],
+  "checks": [
+    {
+      "rule_id": "R01",
+      "version": "0.1.0",
+      "name": "Required fields",
+      "findings": [],
+      "tested": 15,
+      "status": "pass"
+    },
+    {
+      "rule_id": "R02",
+      "version": "0.1.0",
+      "name": "Exact amounts and entry signs",
+      "findings": [
+        {
+          "status": "not_testable",
+          "row_positions": [
+            12
+          ],
+          "reason": "Amount must be a finite plain decimal string.",
+          "evidence": {
+            "amount": "not available",
+            "currency": "USD"
+          }
+        }
+      ],
+      "tested": 15,
+      "status": "not_testable"
+    },
+    {
+      "rule_id": "R03",
+      "version": "0.1.0",
+      "name": "Calendar dates",
+      "findings": [
+        {
+          "status": "not_testable",
+          "row_positions": [
+            13
+          ],
+          "reason": "Posting date is missing or is not a valid ISO calendar date.",
+          "evidence": {
+            "posting_date": "2026-02-30"
+          }
+        }
+      ],
+      "tested": 15,
+      "status": "not_testable"
+    },
+    {
+      "rule_id": "R04",
+      "version": "0.1.0",
+      "name": "Source-record identity",
+      "findings": [
+        {
+          "status": "exception",
+          "row_positions": [
+            1,
+            2
+          ],
+          "reason": "An identical source record is repeated. Keep every source row; count its identity once only in the explicitly deduplicated diagnostic subtotal.",
+          "evidence": {
+            "record_id": "R01",
+            "classification": "duplicate_import"
+          }
+        },
+        {
+          "status": "exception",
+          "row_positions": [
+            14,
+            15
+          ],
+          "reason": "One source identity has conflicting content. The unique-identity total is not testable until resolved.",
+          "evidence": {
+            "record_id": "R11",
+            "classification": "conflicting_identity"
+          }
+        }
+      ],
+      "tested": 15,
+      "status": "exception"
+    },
+    {
+      "rule_id": "R05",
+      "version": "0.1.0",
+      "name": "Possible duplicate payment records",
+      "findings": [
+        {
+          "status": "not_testable",
+          "row_positions": [
+            12
+          ],
+          "reason": "Identity, invoice, amount or date evidence is insufficient for duplicate-candidate matching.",
+          "evidence": {}
+        },
+        {
+          "status": "not_testable",
+          "row_positions": [
+            13
+          ],
+          "reason": "Identity, invoice, amount or date evidence is insufficient for duplicate-candidate matching.",
+          "evidence": {}
+        },
+        {
+          "status": "not_testable",
+          "row_positions": [
+            14
+          ],
+          "reason": "Identity, invoice, amount or date evidence is insufficient for duplicate-candidate matching.",
+          "evidence": {}
+        },
+        {
+          "status": "not_testable",
+          "row_positions": [
+            15
+          ],
+          "reason": "Identity, invoice, amount or date evidence is insufficient for duplicate-candidate matching.",
+          "evidence": {}
+        },
+        {
+          "status": "exception",
+          "row_positions": [
+            3,
+            4
+          ],
+          "reason": "Different source records share vendor, invoice, currency, amount, posting date and installment key. They are review candidates, not proof of duplicate cash or loss.",
+          "evidence": {
+            "vendor_id": "Fictional-V02",
+            "invoice_id": "I02",
+            "currency": "USD",
+            "amount": "150.00",
+            "posting_date": "2026-08-04",
+            "installment_id": ""
+          }
+        }
+      ],
+      "tested": 11,
+      "status": "exception_and_not_testable"
+    },
+    {
+      "rule_id": "R06",
+      "version": "0.1.0",
+      "name": "Invoice / posting sequence",
+      "findings": [
+        {
+          "status": "exception",
+          "row_positions": [
+            9
+          ],
+          "reason": "Payment posting precedes invoice date; verify date meaning or whether this was an advance.",
+          "evidence": {
+            "posting_date": "2026-08-02",
+            "invoice_date": "2026-08-08"
+          }
+        },
+        {
+          "status": "not_testable",
+          "row_positions": [
+            13
+          ],
+          "reason": "Both a valid invoice date and posting date are needed for this sequence check.",
+          "evidence": {}
+        }
+      ],
+      "tested": 12,
+      "status": "exception_and_not_testable"
+    },
+    {
+      "rule_id": "R07",
+      "version": "0.1.0",
+      "name": "Cash scope",
+      "findings": [
+        {
+          "status": "scope_exclusion",
+          "row_positions": [
+            10
+          ],
+          "reason": "Award or obligation value is excluded from cash totals.",
+          "evidence": {
+            "record_kind": "award"
+          }
+        }
+      ],
+      "tested": 15,
+      "status": "pass"
+    },
+    {
+      "rule_id": "R08",
+      "version": "0.1.0",
+      "name": "Control-total reconciliation",
+      "findings": [
+        {
+          "status": "not_testable",
+          "row_positions": [],
+          "reason": "Control reconciliation is incomplete; known subtotal is not a verified total.",
+          "evidence": {
+            "currency": "USD",
+            "basis": "unique_record_ids",
+            "known_subtotal": "720.00",
+            "expected": "825.00",
+            "difference": null,
+            "status": "not_testable"
+          }
+        }
+      ],
+      "tested": 2,
+      "status": "not_testable"
+    }
+  ],
+  "row_ledger": [
+    {
+      "position": 1,
+      "record_id": "R01",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "65f7687a3c89616ba571bb6792f642a5a6b6d38bc28cdbf9f2e18bb79754b5c3",
+      "record": {
+        "record_id": "R01",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V01",
+        "invoice_id": "I01",
+        "amount": "100.00",
+        "currency": "USD",
+        "posting_date": "2026-08-02",
+        "invoice_date": "2026-08-01",
+        "entry_type": "payment"
+      },
+      "cash_treatment": "included"
+    },
+    {
+      "position": 2,
+      "record_id": "R01",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "65f7687a3c89616ba571bb6792f642a5a6b6d38bc28cdbf9f2e18bb79754b5c3",
+      "record": {
+        "record_id": "R01",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V01",
+        "invoice_id": "I01",
+        "amount": "100.00",
+        "currency": "USD",
+        "posting_date": "2026-08-02",
+        "invoice_date": "2026-08-01",
+        "entry_type": "payment"
+      },
+      "cash_treatment": "duplicate_import_kept_in_source_rows"
+    },
+    {
+      "position": 3,
+      "record_id": "R02",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "745e7e1d2d35391005f01bdb41267b6dcaf3c2fd820a6abd66b33eb5f447cc89",
+      "record": {
+        "record_id": "R02",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V02",
+        "invoice_id": "I02",
+        "amount": "150.00",
+        "currency": "USD",
+        "posting_date": "2026-08-04",
+        "invoice_date": "2026-08-03",
+        "entry_type": "payment",
+        "payment_reference": "PAY02"
+      },
+      "cash_treatment": "included"
+    },
+    {
+      "position": 4,
+      "record_id": "R03",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "4e52c6ddb0074028fa92281289fa63e1a06e642c2e05bf5b59f5acb80b0d3c41",
+      "record": {
+        "record_id": "R03",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V02",
+        "invoice_id": "I02",
+        "amount": "150.00",
+        "currency": "USD",
+        "posting_date": "2026-08-04",
+        "invoice_date": "2026-08-03",
+        "entry_type": "payment",
+        "payment_reference": "PAY03"
+      },
+      "cash_treatment": "included"
+    },
+    {
+      "position": 5,
+      "record_id": "R04",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "adbcfa0a5f801e688b3d99acfc3e68138c4ba2c2d39dffdcab59093e3cf05aab",
+      "record": {
+        "record_id": "R04",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V03",
+        "invoice_id": "I03",
+        "amount": "100.00",
+        "currency": "USD",
+        "posting_date": "2026-08-06",
+        "invoice_date": "2026-08-05",
+        "entry_type": "payment",
+        "installment_id": "PART01"
+      },
+      "cash_treatment": "included"
+    },
+    {
+      "position": 6,
+      "record_id": "R05",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "0f0987e469a0fc0526c64be488ebf96e40fc6def25445b2993e3c0388604c7e0",
+      "record": {
+        "record_id": "R05",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V03",
+        "invoice_id": "I03",
+        "amount": "100.00",
+        "currency": "USD",
+        "posting_date": "2026-08-06",
+        "invoice_date": "2026-08-05",
+        "entry_type": "payment",
+        "installment_id": "PART02"
+      },
+      "cash_treatment": "included"
+    },
+    {
+      "position": 7,
+      "record_id": "R06",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "0224735a1590e8a3d9b88e0445c00ec1186a3290659b9dfb09f9f785d9ea448c",
+      "record": {
+        "record_id": "R06",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V03",
+        "invoice_id": "I03",
+        "amount": "-40.00",
+        "currency": "USD",
+        "posting_date": "2026-08-07",
+        "invoice_date": "2026-08-05",
+        "entry_type": "credit"
+      },
+      "cash_treatment": "included"
+    },
+    {
+      "position": 8,
+      "record_id": "R07",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "6e5da558389af440069bcf91b545def02b3471637ae310f106ef168cf288a11e",
+      "record": {
+        "record_id": "R07",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V04",
+        "invoice_id": "I04",
+        "amount": "75.00",
+        "currency": "USD",
+        "posting_date": "2026-08-02",
+        "invoice_date": "2026-08-10",
+        "entry_type": "advance"
+      },
+      "cash_treatment": "included"
+    },
+    {
+      "position": 9,
+      "record_id": "R08",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "f896caaf378ff45a7061ee26d28365c2fb7be7fc4abcb575e25f20f6b9883981",
+      "record": {
+        "record_id": "R08",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V05",
+        "invoice_id": "I05",
+        "amount": "65.00",
+        "currency": "USD",
+        "posting_date": "2026-08-02",
+        "invoice_date": "2026-08-08",
+        "entry_type": "payment"
+      },
+      "cash_treatment": "included"
+    },
+    {
+      "position": 10,
+      "record_id": "AW01",
+      "record_kind": "award",
+      "source_sha256": "f47ef54d8948a9e9aefbc500fd93e89607eff8ba473a611981d58efba3059b41",
+      "record": {
+        "record_id": "AW01",
+        "record_kind": "award",
+        "vendor_id": "Fictional-V06",
+        "invoice_id": "AWARD-ONLY",
+        "amount": "1000000.00",
+        "currency": "USD",
+        "posting_date": "2026-08-01",
+        "entry_type": "payment"
+      },
+      "cash_treatment": "excluded_non_cash"
+    },
+    {
+      "position": 11,
+      "record_id": "E01",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "9a0d31d4e46b53d24c3898e639e918bdbd7076ba84cb41c8fd4f9a6e5aad8387",
+      "record": {
+        "record_id": "E01",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V07",
+        "invoice_id": "I07",
+        "amount": "25.00",
+        "currency": "EUR",
+        "posting_date": "2026-08-08",
+        "invoice_date": "2026-08-07",
+        "entry_type": "payment"
+      },
+      "cash_treatment": "included"
+    },
+    {
+      "position": 12,
+      "record_id": "R09",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "51bb70dfbed7685bda869fd0d2bf01bd5c9dc8913c42ecb87bf42321ccdfe53b",
+      "record": {
+        "record_id": "R09",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V08",
+        "invoice_id": "I08",
+        "amount": "not available",
+        "currency": "USD",
+        "posting_date": "2026-08-08",
+        "invoice_date": "2026-08-07",
+        "entry_type": "payment"
+      },
+      "cash_treatment": "amount_not_testable"
+    },
+    {
+      "position": 13,
+      "record_id": "R10",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "42c65f9c517c8499a40d8a02ce5df27086f1eec1e925be782828cb3293b7d5a5",
+      "record": {
+        "record_id": "R10",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V09",
+        "invoice_id": "I09",
+        "amount": "20.00",
+        "currency": "USD",
+        "posting_date": "2026-02-30",
+        "invoice_date": "2026-02-01",
+        "entry_type": "payment"
+      },
+      "cash_treatment": "known_amount_incomplete_record"
+    },
+    {
+      "position": 14,
+      "record_id": "R11",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "03c82eb3951562c77a4686364b62bbd7065dac9fdf3c8d35206e6a09f00832c6",
+      "record": {
+        "record_id": "R11",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V10",
+        "invoice_id": "I10",
+        "amount": "50.00",
+        "currency": "USD",
+        "posting_date": "2026-08-10",
+        "invoice_date": "2026-08-09",
+        "entry_type": "payment"
+      },
+      "cash_treatment": "conflicting_identity"
+    },
+    {
+      "position": 15,
+      "record_id": "R11",
+      "record_kind": "cash_disbursement",
+      "source_sha256": "8ee9604d784ded49bc96298fdeea309131b84be880967ecba6cd8d2864da65fa",
+      "record": {
+        "record_id": "R11",
+        "record_kind": "cash_disbursement",
+        "vendor_id": "Fictional-V10",
+        "invoice_id": "I10",
+        "amount": "60.00",
+        "currency": "USD",
+        "posting_date": "2026-08-10",
+        "invoice_date": "2026-08-09",
+        "entry_type": "payment"
+      },
+      "cash_treatment": "conflicting_identity"
+    }
+  ],
+  "limitations": [
+    "This is an offline analytical specimen, not an audit opinion or a finding of misconduct.",
+    "Equal payment attributes do not establish that two cash transfers occurred.",
+    "Awards and obligations are excluded from cash totals; currencies are never converted or combined.",
+    "Passing these specified checks does not prove the population is accurate, complete or free of irregularities.",
+    "Control totals, date meanings, entry conventions and source authenticity require independent validation."
+  ]
+}

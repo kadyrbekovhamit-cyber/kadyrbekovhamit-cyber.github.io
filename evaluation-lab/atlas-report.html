@@ -1,0 +1,186 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ATLAS · Expenditure diagnostic specimen</title><style>
+    :root{font-family:system-ui,sans-serif;color:#172c39;background:#f3f6f7}*{box-sizing:border-box}body{margin:0}main{max-width:1100px;margin:auto;padding:40px 24px}.eyebrow{letter-spacing:.15em;text-transform:uppercase;font-size:12px;color:#267965;font-weight:700}h1{font-size:clamp(28px,4vw,46px);line-height:1.12;max-width:850px;margin:16px 0}h2{font-size:19px}.lede{font-size:18px;max-width:800px;color:#526774;line-height:1.55}.banner{background:#fff2d8;border-left:4px solid #d0942d;padding:16px;margin:24px 0;line-height:1.5}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card,section,details{background:white;border:1px solid #d9e2e5;border-radius:10px;padding:20px}.card b{display:block;font-size:30px}.card span{font-size:13px;color:#526774}section{margin:18px 0}.status,.tag{font-size:12px;color:#70511b;background:#fff4dc;padding:4px 8px;border-radius:4px;display:inline-block}li{margin:12px 0;line-height:1.5}a{color:#08765b}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f7f8;padding:12px;border-radius:6px;font-size:12px}small{overflow-wrap:anywhere;color:#526774}details{margin:8px 0}summary{cursor:pointer;font-weight:600}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;background:white;font-size:13px}td,th{text-align:left;border-bottom:1px solid #d9e2e5;padding:12px}button{border:1px solid #b8cacc;background:white;color:#172c39;border-radius:6px;padding:10px 14px;cursor:pointer;margin:6px 6px 6px 0}button.active{background:#08765b;color:white;border-color:#08765b}.footer{margin-top:32px;color:#526774;line-height:1.5}@media(max-width:620px){main{padding:24px 16px}.cards{grid-template-columns:repeat(2,1fr)}section{padding:16px}ul{padding-left:20px}}
+    </style></head><body><main><div class="eyebrow">ATLAS · Offline evidence specimen</div><h1>Expenditure review: what the records can establish</h1><p class="lede">Trace every exception to a source row. Separate review candidates from facts, and missing evidence from a passed check.</p><div class="banner"><strong>SYNTHETIC DATA</strong> · Fictional training ledger. Every vendor, invoice, amount and control total was created for this demonstration; no government or customer records are used.<br>Result: <strong>review required</strong>. No real violations or recovered funds are claimed.</div><div class="cards"><div class="card"><b>15</b><span>source rows</span></div><div class="card"><b>1</b><span>duplicate import rows</span></div><div class="card"><b>4</b><span>exception groups</span></div><div class="card"><b>8</b><span>not testable groups</span></div></div><h2>Cash reconciliation by currency</h2><p>Known subtotals remain provisional wherever a record is incomplete. A difference is calculated only when the comparison is supported by complete records.</p><div class="table-wrap"><table><thead><tr><th>Currency</th><th>Basis</th><th>Known subtotal</th><th>Control</th><th>Difference</th><th>Result</th></tr></thead><tbody><tr><td>EUR</td><td>unique record ids</td><td>25.00</td><td>25.00</td><td>0.00</td><td>pass</td></tr><tr><td>USD</td><td>unique record ids</td><td>720.00</td><td>825.00</td><td>Not calculated</td><td>not testable</td></tr></tbody></table></div><h2>Eight documented checks</h2><div id="filters"><button class="active" data-filter="all">All checks</button><button data-filter="exception">Exceptions</button><button data-filter="not_testable">Missing evidence</button><button data-filter="pass">Passed</button></div><section data-state="pass"><h2>R01 · Required fields</h2><div class="status">pass · 15 records / currencies assessed</div><ul><li>Specified check passed for the applicable records.</li></ul></section><section data-state="not_testable"><h2>R02 · Exact amounts and entry signs</h2><div class="status">not testable · 15 records / currencies assessed</div><ul><li><span class="tag">not testable</span><p>Amount must be a finite plain decimal string.</p><a href="#row-12">Row 12</a><pre>{
+  &quot;amount&quot;: &quot;not available&quot;,
+  &quot;currency&quot;: &quot;USD&quot;
+}</pre></li></ul></section><section data-state="not_testable"><h2>R03 · Calendar dates</h2><div class="status">not testable · 15 records / currencies assessed</div><ul><li><span class="tag">not testable</span><p>Posting date is missing or is not a valid ISO calendar date.</p><a href="#row-13">Row 13</a><pre>{
+  &quot;posting_date&quot;: &quot;2026-02-30&quot;
+}</pre></li></ul></section><section data-state="exception"><h2>R04 · Source-record identity</h2><div class="status">exception · 15 records / currencies assessed</div><ul><li><span class="tag">exception</span><p>An identical source record is repeated. Keep every source row; count its identity once only in the explicitly deduplicated diagnostic subtotal.</p><a href="#row-1">Row 1</a> <a href="#row-2">Row 2</a><pre>{
+  &quot;record_id&quot;: &quot;R01&quot;,
+  &quot;classification&quot;: &quot;duplicate_import&quot;
+}</pre></li><li><span class="tag">exception</span><p>One source identity has conflicting content. The unique-identity total is not testable until resolved.</p><a href="#row-14">Row 14</a> <a href="#row-15">Row 15</a><pre>{
+  &quot;record_id&quot;: &quot;R11&quot;,
+  &quot;classification&quot;: &quot;conflicting_identity&quot;
+}</pre></li></ul></section><section data-state="exception_and_not_testable"><h2>R05 · Possible duplicate payment records</h2><div class="status">exception and not testable · 11 records / currencies assessed</div><ul><li><span class="tag">not testable</span><p>Identity, invoice, amount or date evidence is insufficient for duplicate-candidate matching.</p><a href="#row-12">Row 12</a></li><li><span class="tag">not testable</span><p>Identity, invoice, amount or date evidence is insufficient for duplicate-candidate matching.</p><a href="#row-13">Row 13</a></li><li><span class="tag">not testable</span><p>Identity, invoice, amount or date evidence is insufficient for duplicate-candidate matching.</p><a href="#row-14">Row 14</a></li><li><span class="tag">not testable</span><p>Identity, invoice, amount or date evidence is insufficient for duplicate-candidate matching.</p><a href="#row-15">Row 15</a></li><li><span class="tag">exception</span><p>Different source records share vendor, invoice, currency, amount, posting date and installment key. They are review candidates, not proof of duplicate cash or loss.</p><a href="#row-3">Row 3</a> <a href="#row-4">Row 4</a><pre>{
+  &quot;vendor_id&quot;: &quot;Fictional-V02&quot;,
+  &quot;invoice_id&quot;: &quot;I02&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;amount&quot;: &quot;150.00&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-04&quot;,
+  &quot;installment_id&quot;: &quot;&quot;
+}</pre></li></ul></section><section data-state="exception_and_not_testable"><h2>R06 · Invoice / posting sequence</h2><div class="status">exception and not testable · 12 records / currencies assessed</div><ul><li><span class="tag">exception</span><p>Payment posting precedes invoice date; verify date meaning or whether this was an advance.</p><a href="#row-9">Row 9</a><pre>{
+  &quot;posting_date&quot;: &quot;2026-08-02&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-08&quot;
+}</pre></li><li><span class="tag">not testable</span><p>Both a valid invoice date and posting date are needed for this sequence check.</p><a href="#row-13">Row 13</a></li></ul></section><section data-state="pass"><h2>R07 · Cash scope</h2><div class="status">pass · 15 records / currencies assessed</div><ul><li><span class="tag">scope exclusion</span><p>Award or obligation value is excluded from cash totals.</p><a href="#row-10">Row 10</a><pre>{
+  &quot;record_kind&quot;: &quot;award&quot;
+}</pre></li></ul></section><section data-state="not_testable"><h2>R08 · Control-total reconciliation</h2><div class="status">not testable · 2 records / currencies assessed</div><ul><li><span class="tag">not testable</span><p>Control reconciliation is incomplete; known subtotal is not a verified total.</p><pre>{
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;basis&quot;: &quot;unique_record_ids&quot;,
+  &quot;known_subtotal&quot;: &quot;720.00&quot;,
+  &quot;expected&quot;: &quot;825.00&quot;,
+  &quot;difference&quot;: null,
+  &quot;status&quot;: &quot;not_testable&quot;
+}</pre></li></ul></section><h2>Complete source-row ledger</h2><p>Every input row is retained, including repeated imports and records outside cash scope.</p><details id="row-1"><summary>Row 1 · R01 · included</summary><pre>{
+  &quot;record_id&quot;: &quot;R01&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V01&quot;,
+  &quot;invoice_id&quot;: &quot;I01&quot;,
+  &quot;amount&quot;: &quot;100.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-02&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-01&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;
+}</pre><small>Source-row SHA-256: 65f7687a3c89616ba571bb6792f642a5a6b6d38bc28cdbf9f2e18bb79754b5c3</small></details><details id="row-2"><summary>Row 2 · R01 · duplicate import kept in source rows</summary><pre>{
+  &quot;record_id&quot;: &quot;R01&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V01&quot;,
+  &quot;invoice_id&quot;: &quot;I01&quot;,
+  &quot;amount&quot;: &quot;100.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-02&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-01&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;
+}</pre><small>Source-row SHA-256: 65f7687a3c89616ba571bb6792f642a5a6b6d38bc28cdbf9f2e18bb79754b5c3</small></details><details id="row-3"><summary>Row 3 · R02 · included</summary><pre>{
+  &quot;record_id&quot;: &quot;R02&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V02&quot;,
+  &quot;invoice_id&quot;: &quot;I02&quot;,
+  &quot;amount&quot;: &quot;150.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-04&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-03&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;,
+  &quot;payment_reference&quot;: &quot;PAY02&quot;
+}</pre><small>Source-row SHA-256: 745e7e1d2d35391005f01bdb41267b6dcaf3c2fd820a6abd66b33eb5f447cc89</small></details><details id="row-4"><summary>Row 4 · R03 · included</summary><pre>{
+  &quot;record_id&quot;: &quot;R03&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V02&quot;,
+  &quot;invoice_id&quot;: &quot;I02&quot;,
+  &quot;amount&quot;: &quot;150.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-04&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-03&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;,
+  &quot;payment_reference&quot;: &quot;PAY03&quot;
+}</pre><small>Source-row SHA-256: 4e52c6ddb0074028fa92281289fa63e1a06e642c2e05bf5b59f5acb80b0d3c41</small></details><details id="row-5"><summary>Row 5 · R04 · included</summary><pre>{
+  &quot;record_id&quot;: &quot;R04&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V03&quot;,
+  &quot;invoice_id&quot;: &quot;I03&quot;,
+  &quot;amount&quot;: &quot;100.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-06&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-05&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;,
+  &quot;installment_id&quot;: &quot;PART01&quot;
+}</pre><small>Source-row SHA-256: adbcfa0a5f801e688b3d99acfc3e68138c4ba2c2d39dffdcab59093e3cf05aab</small></details><details id="row-6"><summary>Row 6 · R05 · included</summary><pre>{
+  &quot;record_id&quot;: &quot;R05&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V03&quot;,
+  &quot;invoice_id&quot;: &quot;I03&quot;,
+  &quot;amount&quot;: &quot;100.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-06&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-05&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;,
+  &quot;installment_id&quot;: &quot;PART02&quot;
+}</pre><small>Source-row SHA-256: 0f0987e469a0fc0526c64be488ebf96e40fc6def25445b2993e3c0388604c7e0</small></details><details id="row-7"><summary>Row 7 · R06 · included</summary><pre>{
+  &quot;record_id&quot;: &quot;R06&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V03&quot;,
+  &quot;invoice_id&quot;: &quot;I03&quot;,
+  &quot;amount&quot;: &quot;-40.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-07&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-05&quot;,
+  &quot;entry_type&quot;: &quot;credit&quot;
+}</pre><small>Source-row SHA-256: 0224735a1590e8a3d9b88e0445c00ec1186a3290659b9dfb09f9f785d9ea448c</small></details><details id="row-8"><summary>Row 8 · R07 · included</summary><pre>{
+  &quot;record_id&quot;: &quot;R07&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V04&quot;,
+  &quot;invoice_id&quot;: &quot;I04&quot;,
+  &quot;amount&quot;: &quot;75.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-02&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-10&quot;,
+  &quot;entry_type&quot;: &quot;advance&quot;
+}</pre><small>Source-row SHA-256: 6e5da558389af440069bcf91b545def02b3471637ae310f106ef168cf288a11e</small></details><details id="row-9"><summary>Row 9 · R08 · included</summary><pre>{
+  &quot;record_id&quot;: &quot;R08&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V05&quot;,
+  &quot;invoice_id&quot;: &quot;I05&quot;,
+  &quot;amount&quot;: &quot;65.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-02&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-08&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;
+}</pre><small>Source-row SHA-256: f896caaf378ff45a7061ee26d28365c2fb7be7fc4abcb575e25f20f6b9883981</small></details><details id="row-10"><summary>Row 10 · AW01 · excluded non cash</summary><pre>{
+  &quot;record_id&quot;: &quot;AW01&quot;,
+  &quot;record_kind&quot;: &quot;award&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V06&quot;,
+  &quot;invoice_id&quot;: &quot;AWARD-ONLY&quot;,
+  &quot;amount&quot;: &quot;1000000.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-01&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;
+}</pre><small>Source-row SHA-256: f47ef54d8948a9e9aefbc500fd93e89607eff8ba473a611981d58efba3059b41</small></details><details id="row-11"><summary>Row 11 · E01 · included</summary><pre>{
+  &quot;record_id&quot;: &quot;E01&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V07&quot;,
+  &quot;invoice_id&quot;: &quot;I07&quot;,
+  &quot;amount&quot;: &quot;25.00&quot;,
+  &quot;currency&quot;: &quot;EUR&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-08&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-07&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;
+}</pre><small>Source-row SHA-256: 9a0d31d4e46b53d24c3898e639e918bdbd7076ba84cb41c8fd4f9a6e5aad8387</small></details><details id="row-12"><summary>Row 12 · R09 · amount not testable</summary><pre>{
+  &quot;record_id&quot;: &quot;R09&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V08&quot;,
+  &quot;invoice_id&quot;: &quot;I08&quot;,
+  &quot;amount&quot;: &quot;not available&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-08&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-07&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;
+}</pre><small>Source-row SHA-256: 51bb70dfbed7685bda869fd0d2bf01bd5c9dc8913c42ecb87bf42321ccdfe53b</small></details><details id="row-13"><summary>Row 13 · R10 · known amount incomplete record</summary><pre>{
+  &quot;record_id&quot;: &quot;R10&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V09&quot;,
+  &quot;invoice_id&quot;: &quot;I09&quot;,
+  &quot;amount&quot;: &quot;20.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-02-30&quot;,
+  &quot;invoice_date&quot;: &quot;2026-02-01&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;
+}</pre><small>Source-row SHA-256: 42c65f9c517c8499a40d8a02ce5df27086f1eec1e925be782828cb3293b7d5a5</small></details><details id="row-14"><summary>Row 14 · R11 · conflicting identity</summary><pre>{
+  &quot;record_id&quot;: &quot;R11&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V10&quot;,
+  &quot;invoice_id&quot;: &quot;I10&quot;,
+  &quot;amount&quot;: &quot;50.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-10&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-09&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;
+}</pre><small>Source-row SHA-256: 03c82eb3951562c77a4686364b62bbd7065dac9fdf3c8d35206e6a09f00832c6</small></details><details id="row-15"><summary>Row 15 · R11 · conflicting identity</summary><pre>{
+  &quot;record_id&quot;: &quot;R11&quot;,
+  &quot;record_kind&quot;: &quot;cash_disbursement&quot;,
+  &quot;vendor_id&quot;: &quot;Fictional-V10&quot;,
+  &quot;invoice_id&quot;: &quot;I10&quot;,
+  &quot;amount&quot;: &quot;60.00&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;posting_date&quot;: &quot;2026-08-10&quot;,
+  &quot;invoice_date&quot;: &quot;2026-08-09&quot;,
+  &quot;entry_type&quot;: &quot;payment&quot;
+}</pre><small>Source-row SHA-256: 8ee9604d784ded49bc96298fdeea309131b84be880967ecba6cd8d2864da65fa</small></details><h2>Interpretation limits</h2><ul><li>This is an offline analytical specimen, not an audit opinion or a finding of misconduct.</li><li>Equal payment attributes do not establish that two cash transfers occurred.</li><li>Awards and obligations are excluded from cash totals; currencies are never converted or combined.</li><li>Passing these specified checks does not prove the population is accurate, complete or free of irregularities.</li><li>Control totals, date meanings, entry conventions and source authenticity require independent validation.</li></ul><div class="footer">Analyzer 0.1.0 · Runs locally with no network or model calls.<br>Input SHA-256: <small>3bcd7ab082a1c2ee0d6fc0ee35505e8f29d44b92800c89dcb2cea0e610f9a987</small></div></main><script>document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('section[data-state]').forEach(s=>s.hidden=b.dataset.filter!=='all'&&!s.dataset.state.includes(b.dataset.filter));}));</script></body></html>

@@ -1,0 +1,23 @@
+{
+  "title": "Expenditure review: what the records can establish",
+  "source": {"type": "synthetic", "description": "Fictional training ledger. Every vendor, invoice, amount and control total was created for this demonstration; no government or customer records are used."},
+  "currency_decimal_places": {"USD": 2, "EUR": 2},
+  "controls": {"basis": "unique_record_ids", "totals": {"USD": "825.00", "EUR": "25.00"}},
+  "records": [
+    {"record_id":"R01","record_kind":"cash_disbursement","vendor_id":"Fictional-V01","invoice_id":"I01","amount":"100.00","currency":"USD","posting_date":"2026-08-02","invoice_date":"2026-08-01","entry_type":"payment"},
+    {"record_id":"R01","record_kind":"cash_disbursement","vendor_id":"Fictional-V01","invoice_id":"I01","amount":"100.00","currency":"USD","posting_date":"2026-08-02","invoice_date":"2026-08-01","entry_type":"payment"},
+    {"record_id":"R02","record_kind":"cash_disbursement","vendor_id":"Fictional-V02","invoice_id":"I02","amount":"150.00","currency":"USD","posting_date":"2026-08-04","invoice_date":"2026-08-03","entry_type":"payment","payment_reference":"PAY02"},
+    {"record_id":"R03","record_kind":"cash_disbursement","vendor_id":"Fictional-V02","invoice_id":"I02","amount":"150.00","currency":"USD","posting_date":"2026-08-04","invoice_date":"2026-08-03","entry_type":"payment","payment_reference":"PAY03"},
+    {"record_id":"R04","record_kind":"cash_disbursement","vendor_id":"Fictional-V03","invoice_id":"I03","amount":"100.00","currency":"USD","posting_date":"2026-08-06","invoice_date":"2026-08-05","entry_type":"payment","installment_id":"PART01"},
+    {"record_id":"R05","record_kind":"cash_disbursement","vendor_id":"Fictional-V03","invoice_id":"I03","amount":"100.00","currency":"USD","posting_date":"2026-08-06","invoice_date":"2026-08-05","entry_type":"payment","installment_id":"PART02"},
+    {"record_id":"R06","record_kind":"cash_disbursement","vendor_id":"Fictional-V03","invoice_id":"I03","amount":"-40.00","currency":"USD","posting_date":"2026-08-07","invoice_date":"2026-08-05","entry_type":"credit"},
+    {"record_id":"R07","record_kind":"cash_disbursement","vendor_id":"Fictional-V04","invoice_id":"I04","amount":"75.00","currency":"USD","posting_date":"2026-08-02","invoice_date":"2026-08-10","entry_type":"advance"},
+    {"record_id":"R08","record_kind":"cash_disbursement","vendor_id":"Fictional-V05","invoice_id":"I05","amount":"65.00","currency":"USD","posting_date":"2026-08-02","invoice_date":"2026-08-08","entry_type":"payment"},
+    {"record_id":"AW01","record_kind":"award","vendor_id":"Fictional-V06","invoice_id":"AWARD-ONLY","amount":"1000000.00","currency":"USD","posting_date":"2026-08-01","entry_type":"payment"},
+    {"record_id":"E01","record_kind":"cash_disbursement","vendor_id":"Fictional-V07","invoice_id":"I07","amount":"25.00","currency":"EUR","posting_date":"2026-08-08","invoice_date":"2026-08-07","entry_type":"payment"},
+    {"record_id":"R09","record_kind":"cash_disbursement","vendor_id":"Fictional-V08","invoice_id":"I08","amount":"not available","currency":"USD","posting_date":"2026-08-08","invoice_date":"2026-08-07","entry_type":"payment"},
+    {"record_id":"R10","record_kind":"cash_disbursement","vendor_id":"Fictional-V09","invoice_id":"I09","amount":"20.00","currency":"USD","posting_date":"2026-02-30","invoice_date":"2026-02-01","entry_type":"payment"},
+    {"record_id":"R11","record_kind":"cash_disbursement","vendor_id":"Fictional-V10","invoice_id":"I10","amount":"50.00","currency":"USD","posting_date":"2026-08-10","invoice_date":"2026-08-09","entry_type":"payment"},
+    {"record_id":"R11","record_kind":"cash_disbursement","vendor_id":"Fictional-V10","invoice_id":"I10","amount":"60.00","currency":"USD","posting_date":"2026-08-10","invoice_date":"2026-08-09","entry_type":"payment"}
+  ]
+}
