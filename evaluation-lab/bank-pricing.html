@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="An offline bank product-economics specimen: compare deposit assumptions, loan income yields and account tariffs with explicit cost conventions and sensitivity cases."><title>Bank Product Lab · Rates, fees and contribution</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#142d3b;background:#f3f6f8}*{box-sizing:border-box}body{margin:0}header{background:#142d3b;color:#fff;padding:22px max(20px,calc((100vw - 1120px)/2));display:flex;justify-content:space-between;gap:20px}header a{color:#fff}header b{letter-spacing:.08em}main{max-width:1160px;padding:42px 20px;margin:auto}a{color:#087b6b}.eyebrow{font-size:12px;font-weight:750;letter-spacing:.14em;text-transform:uppercase;color:#087b6b}h1{font-size:clamp(34px,5vw,56px);line-height:1.06;letter-spacing:-.035em;max-width:850px;margin:16px 0 20px}h2{font-size:25px}h3{font-size:17px;margin-top:28px}.lead{font-size:19px;line-height:1.65;max-width:920px;color:#526974}.notice{background:#e5f1ed;border-left:4px solid #218274;padding:18px 22px;line-height:1.6;margin:28px 0}button{font:inherit;cursor:pointer;border:1px solid #bacbd1;background:#fff;color:#173443;padding:11px 16px;border-radius:6px}button:disabled{opacity:.45;cursor:not-allowed}button[aria-pressed=true],.primary{background:#087b6b;color:#fff;border-color:#087b6b}nav{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0}.panel{padding:26px;background:#fff;border:1px solid #d3dfe5;border-radius:10px}.input-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}label{font-size:13px;color:#435e6a;display:block;line-height:1.5}input[type=text]{display:block;width:100%;border:1px solid #bdced5;background:#fbfcfc;border-radius:5px;padding:11px 12px;font:600 16px system-ui;color:#173443;margin-top:6px}input:focus,button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #dfb460;outline-offset:2px}.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:22px}.controls label{flex-basis:100%;font-size:14px}input[type=checkbox]{width:17px;height:17px;vertical-align:middle;margin-right:8px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}.metric{background:#fff;border:1px solid #d3dfe5;padding:24px;border-radius:9px}.metric span{display:block;font-size:13px;color:#526974}.metric strong{display:block;font-size:29px;letter-spacing:-.025em;margin:12px 0}.metric small{font-size:12px;color:#526974;line-height:1.5;display:block}.result-note{font-size:14px;line-height:1.6;color:#526974}.table-wrap{overflow:auto;background:#fff;border:1px solid #d3dfe5;border-radius:8px}table{width:100%;border-collapse:collapse;text-align:left;font-size:13px}th,td{padding:16px;border-bottom:1px solid #e1e8eb;line-height:1.5}th{background:#edf3f4}tbody tr:last-child td{border-bottom:0}.error{background:#fff0dc;border-left:4px solid #aa701e;padding:20px;margin-top:24px;line-height:1.6}details{background:#fff;padding:20px;border:1px solid #d3dfe5;border-radius:8px;margin-top:20px;font-size:14px;line-height:1.6}summary{font-weight:650;cursor:pointer}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;padding:16px;background:#f1f5f6}.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}fieldset{border:1px solid #d3dfe5;border-radius:6px;padding:18px}fieldset label+label{margin-top:14px}legend{font-size:14px;font-weight:650}.offers{margin:32px 0;padding:28px;background:#142d3b;color:white;border-radius:9px;line-height:1.7}.offers h2{margin-top:0}.offers a{display:inline-block;background:white;color:#142d3b;padding:12px 16px;border-radius:5px;text-decoration:none;font-weight:650}.offer-price{font-size:25px;font-weight:750}footer{font-size:13px;color:#526974;line-height:1.6;margin-top:30px}li{margin:10px 0}noscript{display:block;padding:20px;background:#fff0dc}@media(max-width:800px){.input-grid,.metrics,.plan-grid{grid-template-columns:1fr 1fr}.metric:last-child{grid-column:1/-1}.panel{padding:20px}}@media(max-width:540px){.input-grid,.metrics,.plan-grid{grid-template-columns:1fr}.metric:last-child{grid-column:auto}header{font-size:13px}main{padding-top:28px}.panel{padding:18px}}
+</style></head><body>
+<header><b>BANK PRODUCT LAB</b><a href="index.html">Evaluation lab</a></header>
+<main><div class="eyebrow">Product economics & offer design · Technical specimen</div><h1>Design the offer.<br>Expose the economics.</h1><p class="lead">Compare three product variants, inspect what the customer pays or earns, and test whether the stated contribution target survives a change in costs. Keep every assumption available for review.</p>
+<div class="notice"><strong>Fictional USD assumptions, not market rates.</strong> This local what-if model is an early analytical specimen. It does not set a bank's rates, predict demand or approve a product. Inputs stay in this browser; the page has no upload or remote calculation service.</div>
+<nav aria-label="Product family"><button data-model="deposit" aria-pressed="true">Deposits</button><button data-model="loan" aria-pressed="false">Loans</button><button data-model="tariff" aria-pressed="false">Account tariffs</button></nav>
+<section class="panel"><h2 id="model-title"></h2><p id="model-description" class="result-note"></p><div id="assumptions"></div><div class="controls"><label><input type="checkbox" id="basis-confirmed" checked>I confirm the documented allocation convention for this fictional scenario.</label><button id="reset">Reset fictional example</button><button id="export" class="primary">Export scenario JSON</button></div></section>
+<section id="results" aria-label="Calculated scenario results" aria-live="polite"></section>
+<details id="cost-basis"><summary>Cost conventions and formula definitions</summary>
+<p><strong>Deposits, annual:</strong> contribution = average balance × (net FTP credit − paid interest − variable servicing rate) / 100 − annual fixed servicing cost. The threshold solves the stated contribution target. FTP credit is assumed net of the bank's liquidity, reserve and deposit-insurance allocations and excludes the separate servicing inputs. Deposit capital and other unallocated overheads are outside this specimen.</p>
+<p><strong>Loans, annual:</strong> contribution before capital = average exposure × (expected recognised interest yield + net earned fee yield − FTP charge − incremental annual credit cost − variable operating rate) / 100 − annual fixed operating cost. Economic surplus then subtracts the stated incremental capital charge. FTP applies to the full stated average exposure. Capital charge must exclude any capital-funding amount already allocated through FTP.</p>
+<p>Interest yield excludes fees and already reflects the bank's nonaccrual/foregone-interest treatment. The credit-cost input must not deduct that same loss twice. It is an annualised incremental expense assumption, not a loss-allowance stock or a lifetime ECL amount. Net fee yield excludes passed-through third-party charges; related costs must not also be included in operating inputs. The bank must validate all these conventions before using actual data.</p>
+<p><strong>Tariffs, monthly:</strong> customer bill = monthly plan fee + max(transactions − included transactions, 0) × per-use fee. Contribution = sum of cohort account counts × (customer bill − processing cost × usage − servicing per account) − monthly platform cost. Refunds, indirect taxes and third-party pass-throughs are outside the fictional fee convention. Every plan uses the same fixed population, so comparisons are not an adoption or switching forecast.</p>
+<p>All rate inputs are annual percentages, with up to four decimal places. Stress changes use percentage points. USD inputs use cents; counts are whole nonnegative values. Monetary arithmetic uses integers and retains sub-cent rate effects until display. Individually rounded components may differ from the displayed sum; exact contribution and target-gap amounts are retained in the calculation record. Deposit ceilings round down and loan yield floors round up on a 0.0001 percentage-point grid. A negative or unsupported threshold is shown, not turned into a valid customer offer. Candidate and stressed rates must remain within the specimen's −100% to 100% range; this is a calculation bound, not a legal pricing limit.</p>
+</details>
+<details><summary>Evidence, validation and approval boundaries</summary><p id="test-evidence">Thirteen automated test cases passed on 10 September 2026, including independent reviewer examples, signed threshold rounding, unsupported candidate/stress rates, tariff usage boundaries, exact cents, missing inputs and sub-cent shortfalls. The calculation source also received an independent read-only review. These checks validate the stated specimen mechanics, not a bank's inputs, regulatory approval or realised profitability.</p><p>The general FTP principle is supported by the <a href="https://www.federalreserve.gov/supervisionreg/srletters/sr1603.htm">Federal Reserve's published funds-transfer-pricing guidance</a>. It explains allocation of funding and liquidity risks to products. Its stated US institutional applicability is not claimed for an Uzbekistan bank.</p><p>Customer APR/APY, amortisation schedules, prepayment, deposit runoff, yield-curve repricing, portfolio interactions, taxes and regulatory capital requirements require a separate bank-approved model. These outputs are neither bank-wide NIM nor accounting net profit. Product, treasury, risk, finance, compliance and operational owners retain approval responsibility.</p><p>Model version: <code>bank-product-lab-0.1.0</code>. Prepared with AI assistance. No customer-level credit decision or external bank system is involved.</p></details>
+<section class="offers"><h2>A small, paid bank product review</h2><div class="offer-price">Proposed pilot: USD 1,000</div><p>One product family, one currency, one jurisdiction and up to three variants. Five business days after agreed scope and usable aggregate inputs. Deliverables: editable calculations, a source/assumption register, sensitivity cases, customer-value comparisons and a decision pack for the bank's reviewers.</p><p>Optional ongoing review: <strong>USD 1,500 per month</strong>, up to two scoped updates of the same family and model. Each month requires written agreement; no automatic renewal. These are proposed service prices, not accepted contracts or a promise of improved profitability.</p><a href="https://www.linkedin.com/services/page/194618347044220a03/">Discuss a bank product pilot</a></section>
+<footer>Prepared by Khamit Kadirbekov · 10 September 2026. The model demonstrates transparent arithmetic on fictional assumptions. Actual bank engagement requires agreed inputs, cost allocation, applicable rules and independent bank validation. <a href="index.html">Return to the evaluation lab</a>.</footer>
+<noscript>This interactive specimen needs JavaScript. No calculation has run while JavaScript is disabled.</noscript></main>
+<script>const VERSION = 'bank-product-lab-0.1.0';
+const SCALE = 1000000n; // Money in cents; percentage rates have four decimal places.
+
+function decimal(value, places, name, {negative=false, positive=false, max=1000000000000n}={}) {
+  if (typeof value !== 'string' || !/^-?\d+(?:\.\d+)?$/.test(value.trim())) throw new Error(`${name}: enter a plain decimal number.`);
+  const s=value.trim(), sign=s.startsWith('-')?-1n:1n, parts=s.replace(/^-/, '').split('.');
+  if ((parts[1]||'').length>places || parts[0].length>15) throw new Error(`${name}: unsupported precision or size.`);
+  const n=sign*(BigInt(parts[0])*10n**BigInt(places)+BigInt((parts[1]||'').padEnd(places,'0')||'0'));
+  if ((!negative&&n<0n) || (positive&&n<=0n) || n>max*10n**BigInt(places) || n< -max*10n**BigInt(places)) throw new Error(`${name}: value is outside this specimen's supported range.`);
+  return n;
+}
+const money=(v,n,positive=false)=>decimal(v,2,n,{positive});
+const rate=(v,n,negative=false)=>decimal(v,4,n,{negative,max:100n});
+const count=(v,n)=>decimal(v,0,n,{max:10000000n});
+const floorDiv=(a,b)=>a/b-(a<0n&&a%b!==0n?1n:0n);
+const ceilDiv=(a,b)=>a/b+(a>0n&&a%b!==0n?1n:0n);
+const roundDiv=(a,b)=>a<0n?-((-a+b/2n)/b):(a+b/2n)/b;
+function fixed(n,places=2){const sign=n<0n?'-':'';const s=(n<0n?-n:n).toString().padStart(places+1,'0');return places?sign+s.slice(0,-places)+'.'+s.slice(-places):sign+s;}
+const amount=n=>fixed(roundDiv(n,SCALE));
+const inputMoney=n=>fixed(n);
+const pct=n=>fixed(n,4);
+const supported=n=>n>=-1000000n&&n<=1000000n;
+function checkRates(values,name){if(values.some(v=>!supported(v)))throw new Error(`${name}: a stress or candidate rate is outside the specimen's -100% to 100% range.`);}
+function prepare(input){
+  if(!input || typeof input!=='object' || Array.isArray(input)) throw new Error('Input must be an object.');
+  if(input.currency!=='USD')throw new Error('This specimen uses USD units only; no currency conversion is performed.');
+  if(input.allocationBasisConfirmed!==true) throw new Error('Confirm the documented cost-allocation convention before comparing contribution.');
+}
+function result(kind,input,fn){
+  try {prepare(input);return {version:VERSION,kind,status:'illustrative_calculation',inputs:structuredClone(input),...fn()};}
+  catch(error){return {version:VERSION,kind,status:'not_testable',errors:[error.message]};}
+}
+function hurdle(surplus,target){const gap=surplus-target*SCALE;return {meetsTarget:gap>=0n,gap:amount(gap),gapExactUSD:fixed(gap,8),subCentShortfall:gap<0n&&gap> -SCALE,comparison:'Unrounded arithmetic determines whether the stated target is met; independently rounded display components may not sum to the displayed total.'};}
+
+function deposit(input){return result('deposit',input,()=>{
+  const b=money(input.balance,'Average balance',true),ftp=rate(input.ftp,'Net FTP credit',true),paid=rate(input.paidRate,'Annual interest-expense assumption',true),service=rate(input.servicing,'Variable servicing cost'),fixedCost=money(input.fixedCost,'Annual fixed cost'),target=money(input.target,'Target annual contribution'),shock=rate(input.ftpDrop,'FTP decline');
+  checkRates([ftp-shock,paid-5000n,paid,paid+5000n],'Deposit comparison');
+  const calc=(customerRate,ftpRate)=>{
+    const credit=b*ftpRate,interest=b*customerRate,operating=b*service+fixedCost*SCALE,contribution=credit-interest-operating;
+    return {customerRate:pct(customerRate),ftp:pct(ftpRate),ftpCredit:amount(credit),customerInterest:amount(interest),operatingCost:amount(operating),contribution:amount(contribution),contributionExactUSD:fixed(contribution,8),...hurdle(contribution,target)};
+  };
+  const ceilingNumerator=b*(ftp-service)-(fixedCost+target)*SCALE;
+  const ceiling=floorDiv(ceilingNumerator,b);
+  return {period:'annual',currency:'USD',basis:'Contribution after the specified FTP and servicing allocations; deposit capital and other unallocated costs are outside scope.',ceiling:pct(ceiling),thresholdWithinSupportedRange:supported(ceiling),ceilingRounding:'Rounded downward to the 0.0001 percentage-point grid; negative thresholds are retained.',current:calc(paid,ftp),stress:calc(paid,ftp-shock),variants:[paid-5000n,paid,paid+5000n].map(v=>({...calc(v,ftp),stressContribution:calc(v,ftp-shock).contribution})),target:inputMoney(target)};
+});}
+
+function loan(input){return result('loan',input,()=>{
+  const b=money(input.balance,'Average exposure',true),yieldRate=rate(input.interestYield,'Expected interest yield',true),fees=rate(input.feeYield,'Net earned fee yield',true),ftp=rate(input.ftp,'FTP charge',true),credit=rate(input.creditCost,'Annualised incremental credit cost'),op=rate(input.operating,'Operating cost'),capital=money(input.capitalCharge,'Incremental annual capital charge'),fixedCost=money(input.fixedCost,'Annual fixed cost'),target=money(input.target,'Target economic surplus'),fundShock=rate(input.ftpRise,'FTP increase'),lossShock=rate(input.creditRise,'Credit-cost increase');
+  if(credit+lossShock>1000000n)throw new Error('Stressed annual credit cost exceeds the supported 100% range.');
+  checkRates([ftp+fundShock,yieldRate-10000n,yieldRate,yieldRate+10000n],'Loan comparison');
+  const calc=(y,f,c)=>{
+    const interest=b*y,feeIncome=b*fees,funding=b*f,creditExpense=b*c,operating=b*op+fixedCost*SCALE;
+    const contribution=interest+feeIncome-funding-creditExpense-operating, surplus=contribution-capital*SCALE;
+    return {interestYield:pct(y),interestIncome:amount(interest),feeIncome:amount(feeIncome),fundingCost:amount(funding),creditCost:amount(creditExpense),operatingCost:amount(operating),contribution:amount(contribution),contributionExactUSD:fixed(contribution,8),capitalCharge:inputMoney(capital),economicSurplus:amount(surplus),economicSurplusExactUSD:fixed(surplus,8),...hurdle(surplus,target)};
+  };
+  const requiredNumerator=b*(ftp+credit+op-fees)+(capital+fixedCost+target)*SCALE;
+  const required=ceilDiv(requiredNumerator,b);
+  return {period:'annual',currency:'USD',basis:'Annualised expected income and incremental costs on the same average exposure; this is not a borrower coupon, APR, NIM, accounting net profit or CECL calculation.',requiredYield:pct(required),thresholdWithinSupportedRange:supported(required),yieldRounding:'Rounded upward to the 0.0001 percentage-point grid; negative thresholds are retained.',current:calc(yieldRate,ftp,credit),stress:calc(yieldRate,ftp+fundShock,credit+lossShock),variants:[yieldRate-10000n,yieldRate,yieldRate+10000n].map(v=>({...calc(v,ftp,credit),stressSurplus:calc(v,ftp+fundShock,credit+lossShock).economicSurplus})),target:inputMoney(target)};
+});}
+
+function tariff(input){return result('tariff',input,()=>{
+  const processing=money(input.processing,'Cost per transaction'),service=money(input.servicing,'Monthly servicing per account'),fixedCost=money(input.fixedCost,'Monthly platform cost'),shock=money(input.processingRise,'Processing-cost increase');
+  if(!Array.isArray(input.cohorts)||input.cohorts.length!==3)throw new Error('Supply the three declared synthetic cohorts.');
+  const cohorts=input.cohorts.map((c,i)=>{if(!c||typeof c!=='object'||Array.isArray(c))throw new Error('Each cohort must be an object.');return {name:['Light use','Typical use','Heavy use'][i],accounts:count(c.accounts,'Active accounts'),usage:count(c.usage,'Monthly transactions')};});
+  const total=cohorts.reduce((s,c)=>s+c.accounts,0n);if(total===0n)throw new Error('A nonempty active-account population is needed.');
+  if(!Array.isArray(input.plans)||input.plans.length!==3)throw new Error('Supply three tariff variants.');
+  const variants=input.plans.map((p,i)=>{
+    if(!p||typeof p!=='object'||Array.isArray(p))throw new Error('Each tariff plan must be an object.');
+    const fee=money(p.monthly,'Monthly plan fee'),included=count(p.included,'Included transactions'),unit=money(p.perUse,'Per-use fee');
+    let revenue=0n,cost=fixedCost,stressedCost=fixedCost,transactions=0n;
+    const rows=cohorts.map(c=>{const excess=c.usage>included?c.usage-included:0n,bill=fee+excess*unit;revenue+=c.accounts*bill;cost+=c.accounts*(c.usage*processing+service);stressedCost+=c.accounts*(c.usage*(processing+shock)+service);transactions+=c.accounts*c.usage;return {name:c.name,accounts:fixed(c.accounts,0),usage:fixed(c.usage,0),customerBill:inputMoney(bill)};});
+    return {name:['Pay per use','Simple bundle','Extended bundle'][i],monthly:inputMoney(fee),included:fixed(included,0),perUse:inputMoney(unit),feeRevenue:inputMoney(revenue),operatingCost:inputMoney(cost),contribution:inputMoney(revenue-cost),stressContribution:inputMoney(revenue-stressedCost),accounts:fixed(total,0),transactions:fixed(transactions,0),cohorts:rows};
+  });
+  return {period:'monthly',currency:'USD',basis:'The same fixed cohort population is used for every alternative. No adoption, switching, demand, tax, refund or pass-through forecast is included.',variants};
+});}
+
+const FIXTURES = {"source": "Fictional teaching assumptions only; these are not market quotes or any bank's actual economics.", "deposit": {"currency": "USD", "allocationBasisConfirmed": true, "balance": "100000.00", "ftp": "8.00", "paidRate": "5.50", "servicing": "0.50", "fixedCost": "500.00", "target": "1000.00", "ftpDrop": "1.50"}, "loan": {"currency": "USD", "allocationBasisConfirmed": true, "balance": "100000.00", "interestYield": "12.50", "feeYield": "0.30", "ftp": "7.00", "creditCost": "1.20", "operating": "1.00", "capitalCharge": "1500.00", "fixedCost": "100.00", "target": "1000.00", "ftpRise": "1.00", "creditRise": "0.80"}, "tariff": {"currency": "USD", "allocationBasisConfirmed": true, "processing": "0.08", "servicing": "0.65", "fixedCost": "1000.00", "processingRise": "0.04", "cohorts": [{"accounts": "200", "usage": "4"}, {"accounts": "600", "usage": "12"}, {"accounts": "200", "usage": "30"}], "plans": [{"monthly": "0.00", "included": "0", "perUse": "0.35"}, {"monthly": "2.50", "included": "10", "perUse": "0.20"}, {"monthly": "5.00", "included": "25", "perUse": "0.10"}]}};
+const fieldSets={
+ deposit:[['balance','Average balance · USD'],['ftp','Net FTP credit · annual %'],['paidRate','Interest-expense assumption · annual %'],['servicing','Variable servicing cost · annual %'],['fixedCost','Annual fixed servicing cost · USD'],['target','Target annual contribution · USD'],['ftpDrop','Stress: FTP decline · percentage points']],
+ loan:[['balance','Average exposure · USD'],['interestYield','Expected recognised interest yield · annual %'],['feeYield','Net earned fee yield · annual %'],['ftp','Allocated FTP charge · annual %'],['creditCost','Incremental annual credit cost · %'],['operating','Variable operating cost · annual %'],['capitalCharge','Incremental annual capital charge · USD'],['fixedCost','Annual fixed operating cost · USD'],['target','Target annual economic surplus · USD'],['ftpRise','Stress: FTP increase · percentage points'],['creditRise','Stress: credit-cost increase · percentage points']],
+ tariff:[['processing','Processing cost per transaction · USD'],['servicing','Monthly servicing per account · USD'],['fixedCost','Monthly platform cost · USD'],['processingRise','Stress: processing-cost increase per transaction · USD']]
+};
+const titles={deposit:'Deposit offer economics',loan:'Loan product economics',tariff:'Account tariff design'};
+const explain={deposit:'Compare a paid-interest assumption with the allocated value of funding. All results are annual; customer interest is a simple amount on the stated constant average balance, not APY or a deposit cash-flow quote.',loan:'Compare expected interest-income yields on the same annual average exposure. These are internal income assumptions, not borrower coupon rates or APR quotes. The threshold includes only the stated costs and incremental capital charge.',tariff:'Compare three monthly fee structures against the same fictional cohort population. Customer bills are shown alongside bank contribution. Demand, plan selection and customer switching are not predicted.'};
+const models={deposit,loan,tariff};
+let active='deposit';
+let lastResult=null;
+const current=structuredClone(FIXTURES);
+const form=document.querySelector('#assumptions');
+const fmtMoney=s=>{const sign=s.startsWith('-')?'-':'';return sign+'$'+s.replace(/^-/,'').replace(/\B(?=(\d{3})+(?!\d))/g,',');};
+const fmtPct=s=>s+'%';
+const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const paths={};
+function control(parent,key,label,value,setter){
+ const wrap=document.createElement('label');wrap.textContent=label;
+ const input=document.createElement('input');input.type='text';input.inputMode='decimal';input.value=value;input.id='input-'+key;input.autocomplete='off';input.spellcheck=false;input.dataset.key=key;
+ input.addEventListener('input',()=>{setter(input.value);renderResults();});wrap.append(input);parent.append(wrap);paths[key]=input;
+}
+function renderForm(){
+ form.replaceChildren();document.querySelector('#model-title').textContent=titles[active];document.querySelector('#model-description').textContent=explain[active];
+ document.querySelectorAll('[data-model]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.model===active)));
+ const grid=document.createElement('div');grid.className='input-grid';form.append(grid);
+ for(const [key,label] of fieldSets[active])control(grid,key,label,current[active][key],v=>current[active][key]=v);
+ if(active==='tariff'){
+  const heading=document.createElement('h3');heading.textContent='Same population in every alternative';form.append(heading);
+  const cohorts=document.createElement('div');cohorts.className='input-grid';form.append(cohorts);
+  current.tariff.cohorts.forEach((c,i)=>{for(const [key,label] of [['accounts','active accounts'],['usage','transactions per account / month']])control(cohorts,`cohort-${i}-${key}`,['Light use','Typical use','Heavy use'][i]+' · '+label,c[key],v=>c[key]=v);});
+  const h=document.createElement('h3');h.textContent='Three candidate fee structures';form.append(h);
+  const plans=document.createElement('div');plans.className='plan-grid';form.append(plans);
+  current.tariff.plans.forEach((p,i)=>{const col=document.createElement('fieldset');const legend=document.createElement('legend');legend.textContent=['Pay per use','Simple bundle','Extended bundle'][i];col.append(legend);plans.append(col);for(const [key,label] of [['monthly','Monthly fee · USD'],['included','Included monthly transactions'],['perUse','Fee per excess transaction · USD']])control(col,`plan-${i}-${key}`,label,p[key],v=>p[key]=v);});
+ }
+ document.querySelector('#basis-confirmed').checked=current[active].allocationBasisConfirmed;
+ renderResults();
+}
+function card(label,value,note){return `<div class="metric"><span>${label}</span><strong>${value}</strong><small>${note}</small></div>`;}
+function renderResults(){
+ const r=models[active](current[active]);lastResult=r;const output=document.querySelector('#results'),download=document.querySelector('#export');
+ output.replaceChildren();download.disabled=r.status==='not_testable';
+ if(r.status==='not_testable'){const error=document.createElement('div');error.className='error';error.setAttribute('role','alert');error.textContent='Not testable — '+r.errors.join(' ');output.append(error);return;}
+ let cards='',table='';
+ if(active==='deposit'){
+  cards=card('Annual contribution',fmtMoney(r.current.contribution),'After the specified FTP and servicing allocations')+card('Stressed annual contribution',fmtMoney(r.stress.contribution),'Same paid rate; lower FTP credit')+card('Rate ceiling for stated target',fmtPct(r.ceiling),r.thresholdWithinSupportedRange?'Internal arithmetic threshold; rounded downward':'Outside the supported rate range; no feasible offer is established');
+  table='<thead><tr><th>Interest-expense assumption</th><th>Implied annual interest expense</th><th>Annual contribution</th><th>Stressed contribution</th><th>Base target met?</th></tr></thead><tbody>'+r.variants.map(v=>`<tr><td>${fmtPct(v.customerRate)}</td><td>${fmtMoney(v.customerInterest)}</td><td>${fmtMoney(v.contribution)}</td><td>${fmtMoney(v.stressContribution)}</td><td>${v.meetsTarget?'Yes, under these assumptions':v.subCentShortfall?'No — shortfall below one cent':'No'}</td></tr>`).join('')+'</tbody>';
+ }else if(active==='loan'){
+  cards=card('Annual economic surplus',fmtMoney(r.current.economicSurplus),'After the incremental capital charge')+card('Stressed annual surplus',fmtMoney(r.stress.economicSurplus),'Higher funding and incremental credit costs')+card('Interest-yield floor for target',fmtPct(r.requiredYield),r.thresholdWithinSupportedRange?'Internal yield; not customer APR; rounded upward':'Outside the supported rate range; no feasible offer is established');
+  table='<thead><tr><th>Expected interest yield</th><th>Contribution before capital charge</th><th>Economic surplus</th><th>Stressed surplus</th><th>Base target met?</th></tr></thead><tbody>'+r.variants.map(v=>`<tr><td>${fmtPct(v.interestYield)}</td><td>${fmtMoney(v.contribution)}</td><td>${fmtMoney(v.economicSurplus)}</td><td>${fmtMoney(v.stressSurplus)}</td><td>${v.meetsTarget?'Yes, under these assumptions':v.subCentShortfall?'No — shortfall below one cent':'No'}</td></tr>`).join('')+'</tbody>';
+ }else{
+  cards=r.variants.map(v=>card(v.name,fmtMoney(v.contribution),'Monthly contribution · '+v.accounts+' fixed active accounts')).join('');
+  table='<thead><tr><th>Monthly plan</th><th>Light-use customer bill</th><th>Typical-use customer bill</th><th>Heavy-use customer bill</th><th>Fee revenue</th><th>Contribution</th><th>Stressed contribution</th></tr></thead><tbody>'+r.variants.map(v=>`<tr><td>${v.name}</td>${v.cohorts.map(c=>'<td>'+fmtMoney(c.customerBill)+'</td>').join('')}<td>${fmtMoney(v.feeRevenue)}</td><td>${fmtMoney(v.contribution)}</td><td>${fmtMoney(v.stressContribution)}</td></tr>`).join('')+'</tbody>';
+ }
+ output.innerHTML=`<div class="metrics">${cards}</div><p class="result-note">${escape(r.basis)}</p><div class="table-wrap"><table>${table}</table></div><p class="result-note">${active==='tariff'?'A larger modelled contribution does not identify the best product: customer value, eligibility, demand, switching and approval constraints still matter.':`Stated annual target: ${fmtMoney(r.target)}. Target tests use unrounded arithmetic; amounts display to the nearest cent. Passing this arithmetic threshold is not product approval.`}</p>`;
+ const details=document.createElement('details'),summary=document.createElement('summary'),pre=document.createElement('pre');summary.textContent='Inspect the calculation record';pre.textContent=JSON.stringify(r,null,2);details.append(summary,pre);output.append(details);
+}
+document.querySelectorAll('[data-model]').forEach(b=>b.addEventListener('click',()=>{active=b.dataset.model;renderForm();}));
+document.querySelector('#basis-confirmed').addEventListener('change',e=>{current[active].allocationBasisConfirmed=e.target.checked;renderResults();});
+document.querySelector('#reset').addEventListener('click',()=>{current[active]=structuredClone(FIXTURES[active]);renderForm();});
+document.querySelector('#export').addEventListener('click',()=>{
+ if(!lastResult||lastResult.status==='not_testable')return;
+ const report={source:'User-edited fictional what-if scenario; not independently validated bank data',version:VERSION,model:active,costConvention:document.querySelector('#cost-basis').textContent,results:lastResult};
+ const blob=new Blob([JSON.stringify(report,null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='bank-product-'+active+'-scenario.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+renderForm();
+</script></body></html>
