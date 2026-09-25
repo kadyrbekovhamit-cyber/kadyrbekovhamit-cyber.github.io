@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TargetGraph Claim Audit Agent — Digital Science Catalyst Grant 2026 application">
+  <title>TargetGraph Claim Audit Agent — Catalyst Grant Application</title>
+  <style>
+    :root { color-scheme: light; --ink:#14213d; --muted:#536178; --line:#d9e1ec; --accent:#0b6e69; --paper:#fff; --wash:#f4f7fb; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--wash); color:var(--ink); font:17px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { width:min(880px,calc(100% - 32px)); margin:40px auto; padding:clamp(28px,6vw,72px); background:var(--paper); border:1px solid var(--line); border-radius:20px; box-shadow:0 20px 60px rgba(20,33,61,.08); }
+    .eyebrow { margin:0 0 8px; color:var(--accent); font-size:.82rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+    h1 { margin:.2em 0 .25em; font-size:clamp(2.2rem,7vw,4.5rem); line-height:1.02; letter-spacing:-.045em; }
+    h2 { margin:2.2em 0 .6em; padding-top:.8em; border-top:1px solid var(--line); font-size:1.45rem; line-height:1.25; }
+    p, li { max-width:72ch; }
+    ol { padding-left:1.35em; }
+    li + li { margin-top:.65em; }
+    a { color:var(--accent); overflow-wrap:anywhere; }
+    .meta { margin:0 0 2.5em; color:var(--muted); }
+    .notice { margin:2em 0 0; padding:1em 1.15em; border-left:4px solid var(--accent); background:#edf8f6; color:#244942; }
+    .proof { margin:2em 0 0; padding:1.1em 1.2em; border:1px solid var(--line); border-radius:14px; background:#fbfcfe; }
+    .proof strong { display:block; margin-bottom:.35em; }
+    .proof a + a::before { content:" · "; color:var(--muted); }
+    footer { margin-top:3em; padding-top:1.25em; border-top:1px solid var(--line); color:var(--muted); font-size:.9rem; }
+    @media print { body { background:#fff; } main { width:100%; margin:0; padding:0; border:0; box-shadow:none; } a { color:inherit; } }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Digital Science Catalyst Grant 2026</p>
+  <p class="meta">Application by Khamit Kadirbekov · Tashkent, Uzbekistan</p>
+  <h1>TargetGraph Claim Audit Agent</h1>
+<h2>1. THE PROBLEM</h2>
+<p>Evidence reviewers in health economics, systematic review teams, research groups and publishers repeatedly decide whether a quantitative claim is ready to enter a review, manuscript or decision memo. Today the supporting trail is often split across a reference manager, PDFs, spreadsheets and reviewer notes. A citation may be real while the claim still changes the population, outcome, denominator, unit or time horizon. Arithmetic can be reproducible yet answer the wrong question.</p>
+<p>The immediate decision is: <strong>does this selected evidence support this bounded claim, with the stated limits?</strong> It arises for every material claim that a reviewer extracts or accepts. The cost in reviewer time and correction risk has not yet been measured for this product, so I will not invent a savings number. The funded pilot will establish that baseline and test whether a governed agent reduces duplicate checking without increasing unsupported acceptance.</p>
+<h2>2. YOUR WORKFLOW</h2>
+<p>TargetGraph Claim Audit Agent extends a manual-first local prototype, TargetGraph Evidence Desk.</p>
+<ol>
+<li>A reviewer defines one bounded question and selects a source set in an existing literature workflow. The first integration will accept DOI/RIS/CSV records from Zotero or a comparable reference library; a ReadCube or Dimensions connection would be explored only with permission.</li>
+<li>The agent resolves identifiers and source versions through authorised services, records retrieval time and rights, and refuses inaccessible full text rather than fabricating it.</li>
+<li>It extracts candidate claim tuples: population, intervention or exposure, outcome, numerator, denominator, unit, time horizon, dependence and missing-data rule, each with an exact page, table, row or passage locator.</li>
+<li>It builds a provenance graph linking the review claim to source claims and transformations. Deterministic validators recompute available proportions and sums and test incompatible populations, outcomes, units, denominators and horizons.</li>
+<li>It plans follow-up checks when evidence is incomplete, then either resolves them from authorised sources or records an explicit gap. It must not convert “not found” into “does not exist.”</li>
+<li>The reviewer sees the source text, extraction, checks and reasons. Inclusion, ambiguous mapping and the final supported/unsupported/uncertain judgement require human approval or override with a recorded reason.</li>
+<li>The workflow exports a versioned evidence packet: graph, event log, source manifest, calculations, unresolved gaps and reviewer sign-off.</li>
+</ol>
+<p>The work is genuinely multi-step: retrieval, version control, structured extraction, claim linking, calculation, contradiction testing, escalation and human adjudication depend on one another. A single prompt cannot preserve these state transitions or reliably refuse unsupported transformations.</p>
+<h2>3. TRUST, AUDIT AND GOVERNANCE</h2>
+<p>Every output node will point to a source identifier, version, exact locator, extraction event, tool/model version and transformation. Deterministic arithmetic runs outside the language model. Corrections append to history instead of silently replacing earlier values. Exported packets receive a content hash; this proves file integrity, not authorship or truth.</p>
+<p>The user can replay why a flag appeared and compare the extracted value with the source. Confidence is not used to conceal missing evidence. The agent escalates when a denominator is absent, the full text is unavailable, two sources conflict, units cannot be reconciled, or a requested conclusion exceeds the selected evidence. It refuses clinical recommendations and does not label a review systematic unless its protocol and search meet that standard.</p>
+<p>Accountability stays with the named human reviewer. Pilot metrics will include claim-to-source trace coverage, arithmetic-check accuracy on labelled cases, false acceptance of unsupported transitions, calibrated abstention, correction history completeness and median reviewer minutes per adjudicated claim.</p>
+<h2>4. TEAM</h2>
+<p>I am Khamit Kadirbekov, an independent applied mathematician and AI product builder in Tashkent, Uzbekistan, with an MSc in Applied Mathematics and Optimal Control. My work focuses on turning ambiguous technical claims into versioned inputs, deterministic checks and reproducible reports. Public examples include numerical corrections merged into Apache Fineract (PR 6409) and FinancePy (PR 271).</p>
+<p>I am not a clinician, regulatory specialist or systematic-review methodologist and will not present myself as one. The budget includes paid independent review by an evidence-synthesis or HEOR methodologist and a statistical reviewer. Their names are not yet confirmed.</p>
+<h2>5. WHERE YOU ARE TODAY</h2>
+<p>TargetGraph Evidence Desk 0.1 is a working local browser prototype, not an autonomous agent. A reviewer can create a case, record source locators and evidence dimensions, run exact proportion and rounding checks, flag population/outcome/unit changes, export JSON/Markdown/HTML, and verify an imported archive by SHA-256. Twenty-one automated tests pass.</p>
+<p>One worked sample used a public JAMA author manuscript. Eight selected proportions and three sums were independently recomputed; the report showed why percentages of observation-days and percentages of participants answer different questions. It did not reproduce the authors&#x27; statistical model or accuse the paper of error. A two-page English sample and a private demo are ready.</p>
+<p>There are no users, customers or revenue. Five bounded pilot offers were sent to evidence-synthesis firms in September 2026; no reply or demand validation is claimed. The prototype has no automatic PDF reading, shared database, institutional security, universal source coverage or clinical validation. The grant would fund the next stage rather than relabel the current stage.</p>
+<p>Links: <a href="https://github.com/kadyrbekovhamit-cyber" rel="noopener noreferrer">https://github.com/kadyrbekovhamit-cyber</a> and <a href="https://kadyrbekovhamit-cyber.github.io/" rel="noopener noreferrer">https://kadyrbekovhamit-cyber.github.io/</a></p>
+<h2>6. ALTERNATIVES AND COMPETITORS</h2>
+<p>Reviewers can continue with spreadsheets, reference managers and manual double-checking. Covidence (<a href="https://www.covidence.org/" rel="noopener noreferrer">https://www.covidence.org/</a>) manages collaborative screening, extraction and review records. Elicit (<a href="https://elicit.com/" rel="noopener noreferrer">https://elicit.com/</a>) offers research agents, systematic-review workflows, extraction and exports. Scite (<a href="https://scite.ai/" rel="noopener noreferrer">https://scite.ai/</a>) provides literature discovery, citation context and AI-assistant access. Nested Knowledge (<a href="https://about.nested-knowledge.com/" rel="noopener noreferrer">https://about.nested-knowledge.com/</a>) supports living reviews and structured evidence synthesis.</p>
+<p>TargetGraph is not a broader search engine or a replacement for those platforms. Its proposed distinction is a portable <strong>claim-audit layer</strong>: exact claim-to-locator provenance, explicit denominator/population/outcome transitions, deterministic numerical checks, refusal states and an append-only correction trail. The funded work must prove that this layer adds value when embedded in an existing workflow; feature comparison alone is not evidence of superiority.</p>
+<h2>7. WHERE THIS GOES</h2>
+<p>The long-term product is an institution-ready audit agent that sits between literature discovery/extraction and the acceptance of a material claim. Initial buyers would be HEOR and evidence-synthesis consultancies, research integrity teams, publishers and regulated R&amp;D groups. A services-led pilot at £1,000–£3,000 per bounded workflow and a later per-reviewer or institutional subscription are hypotheses to test, not established prices.</p>
+<p>The first 90-day outcome is deliberately narrower: one permissioned import path, one reproducible claim graph, a public benchmark of failure and abstention cases, and two to three supervised reviewer evaluations. Scale, regulatory use and integrations follow only if the pilot meets pre-agreed trust and usefulness thresholds.</p>
+<h2>8. FIT WITH DIGITAL SCIENCE</h2>
+<p>The workflow sits in evidence synthesis and research integrity for researchers, institutions, publishers and industry. It directly addresses the programme&#x27;s call for multi-step agents with provenance, governance, audit trails and human accountability.</p>
+<p>Digital Science is a strong partner because Dimensions, ReadCube, Scite and its research-software experience cover the workflows and data boundaries this product must respect. I would value guidance on embedding the audit layer rather than building another isolated search interface, on licensing-aligned source access, and on evaluation standards that institutions can trust. No access to Digital Science products, data or customers is assumed.</p>
+<h2>9. BUDGET (75 words)</h2>
+<p>I would use £25,000 over 90 days: £10,000 founder engineering and evaluation; £4,500 evidence-synthesis and statistical review; £3,500 permissioned integration and security review; £2,500 model, API, hosting and licensed-source costs; £2,500 participant honoraria for supervised workflow tests; and £2,000 for benchmark preparation, documentation and contingency. This would turn a local manual-first prototype into a tested multi-step workflow with human gates, provenance exports, benchmark reproducibility and measured reviewer outcomes.</p>
+  <p class="proof"><strong>Public verification</strong><a href="https://github.com/apache/fineract/pull/6409" rel="noopener noreferrer">Apache Fineract PR 6409</a><a href="https://github.com/domokane/FinancePy/pull/271" rel="noopener noreferrer">FinancePy PR 271</a></p>
+  <p class="notice">Current stage: local manual-first prototype. No institutional users, customers, revenue, clinical validation or Digital Science integration are claimed.</p>
+  <footer>Prepared 25 September 2026. The source application and deterministic checks are versioned locally before any public submission.</footer>
+</main>
+</body>
+</html>
